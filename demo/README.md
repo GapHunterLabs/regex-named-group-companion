@@ -1,55 +1,49 @@
-# Demo — Regex Named Group Companion
+# Cómo probar este plugin
 
-Dos partes de la feature, dos pasos de verificación distintos.
+Este plugin ayuda a leer "patrones de búsqueda de texto" (se llaman
+expresiones regulares, o "regex") — cuando ese patrón tiene partes
+con nombre, el plugin muestra esos nombres directo en el código para
+no tener que descifrar el patrón de memoria.
 
-## Parte 1 — Inlay hint (Java + Kotlin)
+## Nota sobre el tool window "Regex Named Groups" (esta sí necesita tu confirmación)
 
-1. Abrí `demo/src/main/java/com/acmecorp/orders/OrderReferenceParser.java`
-   en el sandbox IDE.
-2. Confirmá, línea por línea:
+Antes, el cuadro de texto de prueba del tool window "Regex Named
+Groups" no dejaba escribir ni pegar texto — quedó documentado como
+pendiente. **Ya se aplicó un fix (versión 0.1.1)**, pero todavía
+necesita que alguien confirme en vivo que funciona de verdad:
 
-| Línea | Qué debería verse |
-|---|---|
-| `ORDER_DATE_PATTERN` (3 named groups) | Inlay al final de línea: `year, month, day` |
-| `looksLikeAnInvoiceNumber` (`Pattern.matches` directo, sin constante) | Inlay: `region, sequence` -- el hint también debe aparecer en literales usados directamente en un call site, no solo en constantes |
-| `LEGACY_ORDER_PATTERN` (grupos sin nombre) | **Sin inlay** -- grupos de captura simples, ninguno nombrado |
-| `SUPPORT_EMAIL` (string común) | **Sin inlay** -- no es un regex |
-
-3. Abrí `demo/src/main/kotlin/com/acmecorp/orders/ShipmentTrackingCodes.kt`
-   y confirmá lo mismo:
-
-| Línea | Qué debería verse |
-|---|---|
-| `TRACKING_CODE_PATTERN` (2 named groups) | Inlay: `carrierRegion, trackingId` |
-| `Regex(...)` dentro de `isValidTrackingCode` (call site directo) | Inlay: `carrier, code` |
-| `LEGACY_PATTERN` (grupos sin nombre) | **Sin inlay** |
-| `buildDynamicPattern` (interpolación real `$regionCode`) | **Sin inlay** -- el patrón real no se puede conocer desde el código fuente, nunca debe adivinarse |
-
-## Parte 2 — Tool window "Regex Named Groups"
-
-1. Abrí el tool window (abajo del IDE, secundario -- si no lo ves,
+1. Abrí el tool window (abajo del IDE, secundario — si no lo ves,
    `View → Tool Windows → Regex Named Groups`).
-2. Pattern: `ORD-(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})`
-3. Sample text:
+2. Cliqueá dentro del cuadro de texto grande de arriba y escribí
+   cualquier cosa (o pegá texto con Ctrl+V).
+3. **Si acepta el texto sin problema y no ves ningún artefacto visual
+   raro** (una franja o caracteres cortados arriba a la izquierda del
+   cuadro), el bug está resuelto — avisame para cerrarlo del todo.
+4. **Si sigue sin aceptar texto**, avisame igual — significa que la
+   causa raíz identificada no era la única, y hay que seguir
+   investigando.
 
-```
-Recent orders: ORD-2026-08-19, ORD-2026-07-02, and a malformed one ORD-26-8-9
-```
+## Qué hacer
 
-4. Confirmá:
-   - 2 matches resaltados (el malformado no matchea).
-   - La sección "Named groups" lista, para cada match, los 3 valores
-     reales extraídos (ej. `Match 1: year: "2026", month: "08", day: "19"`).
-5. Cambiá el patrón a uno sin named groups (`\d{4}`) y confirmá que la
-   sección dice `(pattern has no named groups)`, no queda en blanco ni
-   confuso.
-6. Cambiá el patrón a uno inválido (`(?<year>\d{4}` sin cerrar) y
-   confirmá que aparece el mensaje real de `PatternSyntaxException`.
+1. En el panel de la izquierda, abrí el archivo
+   **`OrderReferenceParser.java`** (dentro de `demo` → `src` → `main`
+   → `java` → `com` → `acmecorp` → `orders`).
+2. Mirá el final de las líneas que tienen patrones de búsqueda.
 
-## Qué reportar
+## Qué deberías ver
 
-- ¿Los 4 casos de la Parte 1 (Java) se comportan como la tabla dice?
-- ¿Los 4 casos de la Parte 1 (Kotlin) se comportan como la tabla dice?
-- ¿El tool window extrae los valores reales, en el orden correcto?
-- ¿El caso sin grupos y el caso inválido muestran el mensaje correcto,
-  sin crashear el panel?
+- Al final de la línea con 3 partes con nombre: texto extra en gris
+  con esos 3 nombres (algo como `year, month, day`).
+- Al final de una línea con partes SIN nombre: **no debería aparecer
+  ningún texto extra**.
+- Al final de una línea que no es un patrón de búsqueda (solo texto
+  normal): tampoco debería aparecer nada.
+
+3. Si querés, repetí lo mismo con el archivo
+   **`ShipmentTrackingCodes.kt`** (en la carpeta `kotlin` en vez de
+   `java`) — debería comportarse igual.
+
+## Si algo no se ve así
+
+Sacá la captura igual, y avisame qué línea no coincide con lo de
+arriba (fuera del problema ya conocido del cuadro de texto).
