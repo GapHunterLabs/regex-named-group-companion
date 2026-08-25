@@ -14,6 +14,7 @@ import java.awt.Color
 import java.awt.FlowLayout
 import javax.swing.BorderFactory
 import javax.swing.JPanel
+import javax.swing.JSplitPane
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.BadLocationException
@@ -65,9 +66,27 @@ class RegexNamedGroupPanel : JPanel(BorderLayout()) {
         bottomPanel.add(JBLabel("Named groups:").apply { border = BorderFactory.createEmptyBorder(0, 8, 0, 8) }, BorderLayout.CENTER)
         bottomPanel.add(JBScrollPane(namedGroupsArea), BorderLayout.SOUTH)
 
+        // Two JBTextArea instances (sampleTextArea, editable, and
+        // namedGroupsArea, read-only) used to compete for vertical space
+        // inside a single BorderLayout (CENTER + SOUTH). JTextArea's own
+        // preferred-size contract is documented as unreliable when its
+        // height depends on the width it doesn't know yet at layout time
+        // (Oracle Swing docs, java.awt.BorderLayout/JTextArea) -- with
+        // two such areas stacked in the same BorderLayout, this produced
+        // a real, reproducible visual artifact (stray clipped text from
+        // one region bleeding into the other's top-left corner) and a
+        // focus bug where sampleTextArea looked focused but rejected all
+        // keyboard input (SDK_GOTCHAS.md SS22). A JSplitPane gives each
+        // side an explicit, stable share of the vertical space instead
+        // of leaving two ambiguous preferred sizes to be reconciled by
+        // BorderLayout -- the same fix pattern used by IntelliJ's own
+        // built-in tool windows that stack multiple text areas.
+        val splitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT, JBScrollPane(sampleTextArea), bottomPanel)
+        splitPane.resizeWeight = 0.6
+        splitPane.isContinuousLayout = true
+
         add(headerPanel, BorderLayout.NORTH)
-        add(JBScrollPane(sampleTextArea), BorderLayout.CENTER)
-        add(bottomPanel, BorderLayout.SOUTH)
+        add(splitPane, BorderLayout.CENTER)
 
         val listener = object : DocumentListener {
             override fun insertUpdate(e: DocumentEvent) = updateHighlights()

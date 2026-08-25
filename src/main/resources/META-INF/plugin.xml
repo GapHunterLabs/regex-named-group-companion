@@ -29,6 +29,7 @@
         <highlightingPassFactory implementation="dev.gaphunter.regexnamedgroupcompanion.highlight.NamedGroupPassFactory"/>
 
         <toolWindow id="Regex Named Groups" secondary="true" anchor="bottom"
+                    icon="/icons/toolWindow.svg"
                     factoryClass="dev.gaphunter.regexnamedgroupcompanion.toolwindow.RegexNamedGroupToolWindowFactory"/>
     </extensions>
 
