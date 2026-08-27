@@ -26,6 +26,7 @@
     <depends>org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="Regex Named Group Companion" displayType="BALLOON"/>
         <highlightingPassFactory implementation="dev.gaphunter.regexnamedgroupcompanion.highlight.NamedGroupPassFactory"/>
 
         <toolWindow id="Regex Named Groups" secondary="true" anchor="bottom"
