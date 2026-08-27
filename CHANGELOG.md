@@ -8,8 +8,8 @@
 
 ### Fixed
 
-- **Tool window keyboard input bug** (SDK_GOTCHAS.md §22, discovered
-  2026-08-19, root-caused and fixed 2026-08-24): the sample text area
+- **Tool window keyboard input bug** (discovered 2026-08-19,
+  root-caused and fixed 2026-08-24): the sample text area
   looked focused (highlighted border, blinking caret) but rejected
   all keyboard input, with a real visual artifact (clipped text from
   the read-only "Named groups" area bleeding into the sample area's
