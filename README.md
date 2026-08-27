@@ -12,7 +12,7 @@ overall match highlighted.
 ## Why it exists
 
 An original idea, not a port of an existing competitor — validated
-against `CONSTITUTION.md` §1's "Plan B permanente" discipline before
+against this catalog's own idea-validation discipline before
 being built: (1) confirmed no plugin in this catalog or in JetBrains
 Marketplace does exactly this (the closest, "Regex Tool" at 17,961
 downloads, is a generic tester with no inline-in-source-code angle at

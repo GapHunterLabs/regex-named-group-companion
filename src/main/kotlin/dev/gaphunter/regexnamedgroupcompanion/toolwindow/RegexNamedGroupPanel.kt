@@ -76,7 +76,7 @@ class RegexNamedGroupPanel : JPanel(BorderLayout()) {
         // a real, reproducible visual artifact (stray clipped text from
         // one region bleeding into the other's top-left corner) and a
         // focus bug where sampleTextArea looked focused but rejected all
-        // keyboard input (SDK_GOTCHAS.md SS22). A JSplitPane gives each
+        // keyboard input. A JSplitPane gives each
         // side an explicit, stable share of the vertical space instead
         // of leaving two ambiguous preferred sizes to be reconciled by
         // BorderLayout -- the same fix pattern used by IntelliJ's own
