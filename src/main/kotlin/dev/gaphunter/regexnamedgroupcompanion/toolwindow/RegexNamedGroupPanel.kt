@@ -1,14 +1,17 @@
 package dev.gaphunter.regexnamedgroupcompanion.toolwindow
 
+import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
+import com.intellij.util.Alarm
 import dev.gaphunter.regexnamedgroupcompanion.match.RegexMatcher
 import dev.gaphunter.regexnamedgroupcompanion.model.NamedGroupPreviewResult
 import dev.gaphunter.regexnamedgroupcompanion.model.RegexOptions
+import dev.gaphunter.regexnamedgroupcompanion.review.ReviewPrompt
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
@@ -31,7 +34,7 @@ import javax.swing.text.DefaultHighlighter
  * typically-short sample text stays cheap even with the extra
  * `Matcher.group(name)` calls per match.
  */
-class RegexNamedGroupPanel : JPanel(BorderLayout()) {
+class RegexNamedGroupPanel(private val project: Project? = null) : JPanel(BorderLayout()) {
 
     private val patternField = JBTextField()
     private val caseInsensitiveCheckbox = JBCheckBox("Case insensitive")
@@ -41,6 +44,14 @@ class RegexNamedGroupPanel : JPanel(BorderLayout()) {
     private val statusLabel = JBLabel(" ")
     private val namedGroupsArea = JBTextArea(6, 60).apply { lineWrap = true; wrapStyleWord = true; isEditable = false }
     private val highlightPainter = DefaultHighlighter.DefaultHighlightPainter(JBColor(Color(255, 235, 59, 120), Color(255, 235, 59, 90)))
+
+    // Live-per-keystroke recompute (see the class doc above) is exactly the
+    // "never count a keystroke" case the CTA design warns about -- a
+    // separate debounce, only for the CTA signal, turns that continuous
+    // stream into one discrete "the user paused after typing something
+    // that produced a real match" event, ~800ms after the last edit.
+    // No parent Disposable is passed (this panel isn't one).
+    private val reviewAlarm = Alarm(Alarm.ThreadToUse.SWING_THREAD, null)
 
     init {
         val topPanel = JPanel(BorderLayout())
@@ -123,6 +134,7 @@ class RegexNamedGroupPanel : JPanel(BorderLayout()) {
                 statusLabel.text = "${result.matches.size} match(es)"
                 statusLabel.foreground = JBColor.foreground()
                 namedGroupsArea.text = formatNamedGroups(result)
+                if (result.matches.isNotEmpty()) scheduleReviewHit()
             }
             is NamedGroupPreviewResult.Error -> {
                 statusLabel.text = "Invalid pattern: ${result.message}"
@@ -144,6 +156,17 @@ class RegexNamedGroupPanel : JPanel(BorderLayout()) {
             }
             "Match ${index + 1}: $groupsText"
         }.joinToString(separator = "\n")
+    }
+
+    /**
+     * Debounced ~800ms after the last edit -- reset on every call, so a
+     * user who keeps typing (still producing matches on every keystroke)
+     * never fires this repeatedly; only a real pause after a successful
+     * pattern counts as one real "session of use".
+     */
+    private fun scheduleReviewHit() {
+        reviewAlarm.cancelAllRequests()
+        reviewAlarm.addRequest({ ReviewPrompt.recordHit(project) }, 800)
     }
 
     // Exposed for tests only.

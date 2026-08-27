@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+## [0.1.2]
+
+### Added
+
+- Review/star CTA: after 5 debounced sessions of use in the tool
+  window (a real pause after typing a pattern that actually matched
+  something -- never a raw keystroke), a one-time notification asks
+  whether to rate the plugin on Marketplace, with a permanent "Don't
+  ask again" option. Specific to the tool window -- the plugin's
+  separate inline inlay is not part of this.
+
 ## [0.1.1]
 
 ### Fixed
@@ -43,6 +54,7 @@
 - A pattern with zero named groups produces no inlay and no false
   "0 groups" noise in the tool window.
 
-[Unreleased]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.2...HEAD
+[0.1.2]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/GapHunterLabs/regex-named-group-companion/commits/0.1.0
