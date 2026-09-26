@@ -62,7 +62,7 @@
   "0 groups" noise in the tool window.
 
 [Unreleased]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.3...HEAD
-[0.1.3]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.2...0.1.3
+[0.1.3]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.1...0.1.3
 [0.1.2]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/GapHunterLabs/regex-named-group-companion/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/GapHunterLabs/regex-named-group-companion/commits/0.1.0
