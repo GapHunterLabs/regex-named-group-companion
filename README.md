@@ -11,19 +11,7 @@ overall match highlighted.
 
 ## Why it exists
 
-An original idea, not a port of an existing competitor — validated
-against this catalog's own idea-validation discipline before
-being built: (1) confirmed no plugin in this catalog or in JetBrains
-Marketplace does exactly this (the closest, "Regex Tool" at 17,961
-downloads, is a generic tester with no inline-in-source-code angle at
-all); (2) confirmed buildable in the ~10-day budget with techniques
-this catalog already has proven (PSI walking for Java/Kotlin, an
-`EditorCustomElementRenderer` inlay, a tool window) — no new
-technique invented for this plugin, just two existing ones combined.
-Same "apuesta consciente sin ancla de mercado" treatment as Refactor
-Simulator / Test Scaffold Companion: v0.1 ships free, no
-time/marketing investment disproportionate to real demand signal
-until there's evidence of adoption.
+An original idea, not a port of an existing competitor. Before building it I confirmed that no plugin in JetBrains Marketplace does exactly this: the closest, "Regex Tool" (17,961 downloads), is a generic tester with nothing shown inline in the source code. It combines two techniques already proven in this catalog: walking the Java/Kotlin PSI and an `EditorCustomElementRenderer` inlay, plus a tool window. It is free.
 
 ## Why built this way
 
